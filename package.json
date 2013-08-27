@@ -1,0 +1,33 @@
+{
+  "name": "oraquery",
+  "version": "0.0.0",
+  "description": "Promise-based wrapper on node-oracle using oraqb.",
+  "author": "Ilia Schelokov <thaumant@gmail.com>",
+  "main": "index.js",
+  "license": "MIT",
+  "dependencies": {
+    "q": "~0.9.6",
+    "oracle": "~0.3.2",
+    "oraqb": "https://github.com/thaumant/oraqb/tarball/master"
+  },
+  "scripts": {
+    "test": "jasmine-node spec/"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/thaumant/node-oraquery.git"
+  },
+  "bugs": {
+    "url": "https://github.com/thaumant/node-oraquery/issues"
+  },
+  "keywords": [
+    "db",
+    "database",
+    "oracle",
+    "oci",
+    "occi",
+    "query-builder",
+    "sql",
+    "sql-builder"
+  ]
+}

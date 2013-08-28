@@ -34,7 +34,9 @@ Connection.prototype = {
 	},
 
 	close: function() {
-		return this._con.close();
+		return this._con.then(function(c) {
+			c.close();
+		});
 	}
 };
 

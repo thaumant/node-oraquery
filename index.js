@@ -31,6 +31,10 @@ Connection.prototype = {
 
 	query: function(sql, params) {
 		return new Query(this, sql, params);
+	},
+
+	close: function() {
+		return this._con.close();
 	}
 };
 

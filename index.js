@@ -29,8 +29,8 @@ Connection.prototype = {
 		return this._con.catch(fn);
 	},
 
-	query: function(sql, params) {
-		return new Query(this, sql, params);
+	query: function(text, params) {
+		return new Query(this, text, params);
 	},
 
 	close: function() {
@@ -47,10 +47,10 @@ Connection.prototype = {
 
 
 
-var Query = function(connection, sql, params) {
+var Query = function(connection, text, params) {
 	if (params === undefined) params = [];
 	this._con = connection._con;
-	this._query = qb.query(sql, params);
+	this._query = qb.query(text, params);
 };
 
 Query.prototype = {
@@ -89,7 +89,7 @@ Query.prototype = {
 		var query = this._query.build(),
 			self = this;
 		return self._con.then(function(con){
-			return q.ninvoke(con, 'execute', query.sql, query.params)
+			return q.ninvoke(con, 'execute', query.text, query.params)
 				.then(function(rows) {
 					return self._process[mode](rows);
 				});

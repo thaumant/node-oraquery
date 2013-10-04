@@ -33,17 +33,16 @@ Connection.prototype = {
 		return new Query(this, text, params);
 	},
 
+	rawQuery: function(text) {
+		return new RawQuery(this, text);
+	},
+
 	close: function() {
 		return this._con.then(function(c) {
 			c.close();
 		});
 	}
 };
-
-
-
-
-
 
 
 
@@ -91,9 +90,19 @@ Query.prototype = {
 		return self._con.then(function(con){
 			return q.ninvoke(con, 'execute', query.text, query.params)
 				.then(function(rows) {
+					for (var rowNum in rows) {
+						for (var colName in rows[rowNum]) {
+							if (rows[rowNum][colName] instanceof Date)
+								rows[rowNum][colName] = self._fixDate(rows[rowNum][colName]);
+						}
+					}
 					return self._process[mode](rows);
 				});
 		});
+	},
+
+	_fixDate: function(date) {
+		return new Date(date.getTime() + new Date().getTimezoneOffset() * 60 * 1000);
 	},
 
 	_process: {
@@ -138,3 +147,29 @@ Query.prototype = {
 		},
 	},
 };
+
+
+
+
+var RawQuery = function(connection, text) {
+	this._con = connection._con;
+	this._text = text;
+};
+
+RawQuery.prototype = {
+	_exec: function() {
+		var self = this;
+		return self._con.then(function(con){
+			return q.ninvoke(con, 'execute', self._text, [])
+				.then(function(rows) {
+					return self._process[mode](rows);
+				});
+		});
+	},
+	exec: Query.prototype.exec,
+	all: Query.prototype.all,
+	column: Query.prototype.column,
+	row: Query.prototype.row,
+	scalar: Query.prototype.scalar,
+	_process: Query.prototype._process
+}
